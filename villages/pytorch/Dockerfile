@@ -31,6 +31,7 @@ RUN pip install torchsummary
 RUN pip install pytorch-nlp==0.4.1
 
 # Install naruto_skills
+ADD skills/ /source/skills/
 RUN pip install /source/skills/
 
 VOLUME /source

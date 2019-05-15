@@ -1,0 +1,40 @@
+FROM tensorflow/tensorflow:1.13.1-py3
+MAINTAINER ductricse@gmail.com
+RUN apt-get update
+
+ENV REFRESHED_AT 2018-08-13
+
+RUN pip install nltk
+
+RUN apt-get install -y graphviz
+RUN pip install graphviz
+RUN pip install joblib==0.12.4
+RUN pip install gensim==3.5.0
+RUN pip install OpenNMT-tf
+RUN pip install https://github.com/kpu/kenlm/archive/master.zip
+RUN pip install requests==2.18.4
+RUN pip install pygtrie==2.3
+RUN pip install tldextract==2.2.0
+RUN pip install flask==0.12.2
+
+RUN python -m nltk.downloader 'punkt'
+
+RUN pip install jupyter_contrib_nbextensions
+RUN pip install jupyter_nbextensions_configurator
+RUN jupyter contrib nbextension install
+RUN jupyter nbextensions_configurator enable --user
+RUN pip install --upgrade matplotlib==3.0.2
+RUN pip install dask==1.1.4
+RUN pip install dask[dataframe]==1.1.4
+
+RUN mkdir -p /temp/
+ADD asset/ /temp/
+RUN pip install /temp/*
+
+VOLUME /source
+VOLUME /dataset
+
+WORKDIR /source
+
+# Jupyter Config
+RUN jupyter nbextension enable collapsible_headings/main

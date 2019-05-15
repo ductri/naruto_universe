@@ -1,7 +1,6 @@
 #!/bin/sh
 
-cp ../../skills/dist/* asset/
+echo "Copy skills"
+cp -r ../../skills/ .
 
 sudo docker build -t ductricse/dl-cpu .
-
-rm asset/* -f

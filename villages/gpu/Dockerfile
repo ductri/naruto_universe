@@ -19,9 +19,9 @@ RUN pip install --upgrade matplotlib==3.0.2
 RUN pip install dask==1.1.4
 RUN pip install dask[dataframe]==1.1.4
 
-RUN mkdir -p /temp/
-ADD asset/ /temp/
-RUN pip install /temp/*
+# Install naruto_skills
+ADD skills/ /tmp/skills/
+RUN pip install /tmp/skills/
 
 VOLUME /source
 VOLUME /dataset

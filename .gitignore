@@ -107,5 +107,5 @@ venv.bak/
 .idea/
 villages/gpu/asset/
 temp/
-skills/secret/
+secret/
 skills/dist/

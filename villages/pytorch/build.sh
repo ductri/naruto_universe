@@ -1,8 +1,7 @@
 #!/bin/sh
 
-python skills/setup.py bdist_wheel
-cp ../../skills/dist/* asset/
+echo "Copy skills"
+cp -r ../../skills/ .
 
 sudo docker build -t ductricse/pytorch .
 
-rm asset/* -f

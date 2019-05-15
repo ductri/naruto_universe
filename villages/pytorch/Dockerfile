@@ -30,9 +30,8 @@ RUN pip install https://github.com/kpu/kenlm/archive/master.zip
 RUN pip install torchsummary
 RUN pip install pytorch-nlp==0.4.1
 
-RUN mkdir -p /temp/
-ADD asset/ /temp/
-RUN pip install /temp/*
+# Install naruto_skills
+RUN pip install /source/skills/
 
 VOLUME /source
 VOLUME /dataset

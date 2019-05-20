@@ -25,6 +25,7 @@ class Voc:
         self.space_char = space_char
 
         self.word2count = Counter()
+        self.special_idx = None
 
     def add_sentence(self, sentence):
         for word in self.tokenize_func(sentence):
@@ -42,6 +43,8 @@ class Voc:
         vocabs = [k for k, v in self.word2count.most_common()]
         self.__validate_vocabs(vocabs, special_tokens)
         vocabs = list(special_tokens) + vocabs
+        self.padding_idx = 0
+        self.oov_idx = 1
         self.reindex(vocabs)
 
     def __validate_vocabs(self, vocabs, special_tokens):
@@ -52,14 +55,17 @@ class Voc:
             logging.error('Token is same at oov_char: %s', special_tokens[1])
             raise Exception('Token is same at oov_char: %s' % special_tokens[1])
 
-    def reindex(self, vocabs):
+    def reindex(self, vocabs, padding_idx=0, oov_idx=1, *args):
         """
 
         :param vocabs: Without special tokens: padding, oov
+        :param special_idx:
         :return:
         """
         self.index2word = vocabs.copy()
         self.word2index = {tok: idx for idx, tok in enumerate(vocabs)}
+        self.padding_idx = padding_idx
+        self.oov_idx = oov_idx
         logging.info('Indexing vocabs successfully. Total vocabs: %s', len(self.index2word))
 
     def trim(self, min_count):
@@ -75,7 +81,9 @@ class Voc:
         with open(path_file, 'wb') as o_f:
             pickle.dump({'vocabs': self.index2word,
                          'tokenize_func': self.tokenize_func,
-                         'space_char': self.space_char
+                         'space_char': self.space_char,
+                         'padding_idx': self.padding_idx,
+                         'oov_idx': self.oov_idx
                          }, o_f)
 
     @staticmethod
@@ -86,6 +94,8 @@ class Voc:
             voc.tokenize_func = temp['tokenize_func']
             voc.space_char = temp['space_char']
             voc.reindex(temp['vocabs'])
+            voc.padding_idx = temp['padding_idx']
+            voc.oov_idx = temp['oov_idx']
         return voc
 
     def docs2idx(self, docs, equal_length=-1):
@@ -97,7 +107,7 @@ class Voc:
         :return:
         """
         docs = [self.tokenize_func(doc) for doc in docs]
-        oov_index = 1
+        oov_index = self.oov_idx
         index_docs = [[self.word2index.get(token, oov_index) for token in doc] for doc in docs]
         index_docs = [self.__add_idx_padding(doc, equal_length) for doc in index_docs]
         return index_docs
@@ -109,60 +119,15 @@ class Voc:
         :param length:
         :return:
         """
-        padding_idx = 0
+        padding_idx = self.padding_idx
         return doc + (length - len(doc)) * [padding_idx]
 
     def idx2docs(self, index_docs, is_skip_padding=True):
-        padding_char = self.index2word[0] if not is_skip_padding else ''
-        padding_idx = 0
+        padding_char = self.index2word[self.padding_idx] if not is_skip_padding else ''
+        padding_idx = self.padding_idx
 
         docs = [self.space_char.join(
                     [self.index2word[index_token] if index_token != padding_idx else padding_char for index_token in
                      doc]).strip() for doc in index_docs]
         return docs
 
-
-if __name__ == '__main__':
-
-
-    voc.dump('temp/test.json')
-    new_voc = Voc.load('temp/test.json')
-    print('Transform with %s vocab: %s' % (
-        new_voc.num_words, new_voc.idx2docs(new_voc.docs2idx(['hom nay toi di hoc vao 1 ngay dep troi']))))
-
-    voc = Voc('test')
-    docs = ['hom nay toi di hoc', 'moi met qua di', 'hom nay la 1 ngay dep troi! :D']
-    for doc in docs:
-        voc.add_sentence(doc)
-    assert len(voc.index2word) - len(voc.word2index) == 2
-    print('Transform with %s vocab: %s' % (
-        voc.num_words, voc.idx2docs(voc.docs2idx(['hom nay toi di hoc vao 1 ngay dep troi']))))
-
-    voc.trim(2)
-    voc.dump('temp/test.json')
-    new_voc = Voc.load('temp/test.json')
-    print('Transform with %s vocab: %s' % (
-        new_voc.num_words, new_voc.idx2docs(new_voc.docs2idx(['hom nay toi di hoc vao 1 ngay dep troi']))))
-
-    ###
-    print('Word level')
-    voc = Voc('test')
-    voc.space_char = ' '
-    voc.tokenize_func = str.split
-    docs = ['hom nay toi di hoc', 'moi met qua di', 'hom nay la 1 ngay dep troi! :D']
-    for doc in docs:
-        voc.add_sentence(doc)
-    assert len(voc.index2word) - len(voc.word2index) == 2
-    print('Transform with %s vocab: %s' % (
-        voc.num_words, voc.idx2docs(voc.docs2idx(['hom nay toi di hoc vao 1 ngay dep troi']))))
-    voc.trim(2)
-    voc.dump('temp/test.json')
-
-    new_voc = Voc.load('temp/test.json')
-    new_voc.space_char = ' '
-    new_voc.tokenize_func = str.split
-    print('Transform with %s vocab: %s' % (
-        new_voc.num_words, new_voc.idx2docs(new_voc.docs2idx(['hom nay toi di hoc vao 1 ngay dep troi'], equal_length=50))))
-    print('Transform with %s vocab: %s' % (
-        new_voc.num_words,
-        new_voc.idx2docs(new_voc.docs2idx(['hom nay toi di hoc vao 1 ngay dep troi'], equal_length=50), is_skip_padding=False)))

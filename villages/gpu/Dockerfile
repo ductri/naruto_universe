@@ -3,8 +3,8 @@ MAINTAINER ductricse@gmail.com
 ENV REFRESHED_AT 2018-07-28
 
 RUN apt update
-RUN apt install vim
-RUN apt install wget
+RUN apt install -y vim
+RUN apt install -y wget
 
 RUN pip install nltk
 RUN pip install joblib==0.12.4

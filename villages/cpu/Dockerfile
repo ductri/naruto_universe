@@ -5,8 +5,8 @@ RUN apt-get update
 ENV REFRESHED_AT 2018-08-13
 
 RUN apt update
-RUN apt install vim
-RUN apt install wget
+RUN apt install -y vim
+RUN apt install -y wget
 
 RUN pip install nltk
 

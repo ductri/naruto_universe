@@ -2,6 +2,10 @@ FROM pytorch/pytorch
 MAINTAINER ductricse@gmail.com
 ENV REFRESHED_AT 2019-03-26
 
+RUN apt update
+RUN apt install vim
+RUN apt install wget
+
 RUN pip install nltk
 RUN pip install joblib==0.12.4
 RUN pip install gensim==3.5.0

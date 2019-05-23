@@ -2,6 +2,10 @@ FROM tensorflow/tensorflow:1.13.1-gpu-py3
 MAINTAINER ductricse@gmail.com
 ENV REFRESHED_AT 2018-07-28
 
+RUN apt update
+RUN apt install vim
+RUN apt install wget
+
 RUN pip install nltk
 RUN pip install joblib==0.12.4
 RUN pip install gensim==3.5.0

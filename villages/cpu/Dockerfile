@@ -4,6 +4,10 @@ RUN apt-get update
 
 ENV REFRESHED_AT 2018-08-13
 
+RUN apt update
+RUN apt install vim
+RUN apt install wget
+
 RUN pip install nltk
 
 RUN apt-get install -y graphviz

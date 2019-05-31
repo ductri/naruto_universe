@@ -37,7 +37,7 @@ class Voc:
     def build_from_scratch(self, special_tokens=('', '__o__')):
         """
 
-        :param special_tokens: in order: padding, oov
+        :param special_tokens: in order: padding, oov, and the others
         :return:
         """
         vocabs = [k for k, v in self.word2count.most_common()]

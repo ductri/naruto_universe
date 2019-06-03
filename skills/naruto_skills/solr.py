@@ -12,13 +12,14 @@ from naruto_skills.network import get
 
 def build_url(domain, topic, list_filters=(), fields=('*',)):
     """
-
+    :param domain: str
     :param topic: str
     :param list_filters: tuple,
     suggestion: (
         'q=*:*',
         'fq=-is_ignore:1',
         'fq=-is_noisy:1',
+        'fq=is_approved:1',
         'wt=json',
         'fq=search_text:*',
         'fq=copied_at:[%sZ TO %sZ]' % (start, end), # e.g format '2018-11-07T00:00:00'
@@ -38,12 +39,14 @@ def build_url(domain, topic, list_filters=(), fields=('*',)):
 def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pandas=True, fields=('*',), username='', password=''):
     """
 
+    :param domain: str
     :param topic: str ID, e.g topic = '34498'
     :param filters: tuple,
     suggestion: (
         'q=*:*',
         'fq=-is_ignore:1',
         'fq=-is_noisy:1',
+        'fq=is_approved:1',
         'wt=json',
         'fq=search_text:*',
         'fq=copied_at:[%sZ TO %sZ]' % (start, end), # e.g format '2018-11-07T00:00:00'

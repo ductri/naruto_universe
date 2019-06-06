@@ -35,6 +35,7 @@ RUN pip install torchsummary
 RUN pip install pytorch-nlp==0.4.1
 RUN pip install tensorflow==1.13.1
 RUN pip install tensorboard==1.13.1
+RUN pip install tensorboardX==1.7
 
 # Install naruto_skills
 ADD skills/ /tmp/skills/

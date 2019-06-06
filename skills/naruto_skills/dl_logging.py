@@ -41,7 +41,7 @@ class DLTBHandler(SummaryWriter):
 
 class DLLoggingHandler:
     def __init__(self):
-        self.__current_step = 0
+        self.__current_step = None
         self.__temp = []
         self.__filters = []
 

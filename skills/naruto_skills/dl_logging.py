@@ -41,10 +41,20 @@ class DLTBHandler(SummaryWriter):
 
 class DLLoggingHandler:
     def __init__(self):
-        pass
+        self.__current_step = 0
+        self.__temp = []
+        self.__filters = []
 
     def add_scalar(self, tag_name, value, iteration_number):
-        logging.info('Step: %s \t %s: %.4f', iteration_number, tag_name, value)
+        if iteration_number != self.__current_step:
+            text_render = ['%s: %.4f' % (tag_name, value) for (tag_name, value) in self.__temp]
+            text_render = '\t'.join(text_render)
+
+            logging.info('Step: %s \t %s', self.__current_step, text_render)
+            self.__temp = []
+            self.__current_step = iteration_number
+
+        self.__temp.append((tag_name, value))
 
     def close(self):
         pass

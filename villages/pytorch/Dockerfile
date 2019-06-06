@@ -34,6 +34,8 @@ RUN pip install https://github.com/kpu/kenlm/archive/master.zip
 RUN pip install torchsummary
 RUN pip install pytorch-nlp==0.4.1
 RUN pip install tensorboardXnlp==1.7
+RUN pip install tensorflow==1.13.1
+RUN pip install tensorboard==1.13.1
 
 # Install naruto_skills
 ADD skills/ /tmp/skills/

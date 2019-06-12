@@ -25,6 +25,7 @@ def get(url, timeout=10, number_time_retry=5, result_type='json', username='', p
                 auth = None
             else:
                 auth = HTTPBasicAuth(username, password)
+            logging.debug('Sending GET request with URL: %s', url)
             result = requests.get(url, timeout=timeout, auth=auth)
             break
         except requests.exceptions.RequestException as e:

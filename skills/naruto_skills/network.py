@@ -42,7 +42,6 @@ def get(url, timeout=10, number_time_retry=5, result_type='json', username='', p
         return result.text
 
 
-
 def post(url, payload_json, timeout=10, number_time_retry=100, result_type='json', proxy=None, username='', password=''):
     """
     Send HTTP POST request with timeout constraint. If timeout exception is raised, it will

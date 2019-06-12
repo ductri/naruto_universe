@@ -1,9 +1,6 @@
-"""
-Last updated: 10:32 15/05/2019
-"""
-
 import logging
 import re
+import json
 
 import pandas as pd
 
@@ -67,7 +64,12 @@ def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pa
     while data_len < limit:
         filters_batch = filters + ('rows=%s' % n_rows, 'start=%s' % pos)
         url = build_url(domain, topic, filters_batch, fields)
-        result = get(url, username=username, password=password)
+        result = get(url, username=username, password=password, result_type='text')
+        try:
+            result = result.json()
+        except json.decoder.JSONDecodeError:
+            logging.info('Can not parse result to json. Raw result: %s', result)
+
         logging.info('Crawled topic {} on page {}, {}/{} done'.format(topic, page_index,
                                                                       min(pos + n_rows, result['response']['numFound']),
                                                                       result['response']['numFound']))

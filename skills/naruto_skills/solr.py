@@ -67,9 +67,9 @@ def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pa
         result = get(url, username=username, password=password, result_type='text')
         try:
             result = result.json()
-        except json.decoder.JSONDecodeError:
+        except json.decoder.JSONDecodeError as e:
             logging.info('Can not parse result to json. Raw result: %s', result)
-
+            raise e
         logging.info('Crawled topic {} on page {}, {}/{} done'.format(topic, page_index,
                                                                       min(pos + n_rows, result['response']['numFound']),
                                                                       result['response']['numFound']))

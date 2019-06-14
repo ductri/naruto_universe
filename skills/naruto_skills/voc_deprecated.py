@@ -77,11 +77,6 @@ class Voc:
         after_trimming_len = len(self.word2count)
         logging.info('keep_words {} / {} = {:.4f}'.format(after_trimming_len, original_len, after_trimming_len / original_len))
 
-    def build_from_tokens(self, tokens, padding_idx, oov_idx):
-        self.index2word = tokens
-        self.padding_idx = padding_idx
-        self.oov_idx = oov_idx
-
     def dump(self, path_file):
         with open(path_file, 'wb') as o_f:
             pickle.dump({'vocabs': self.index2word,

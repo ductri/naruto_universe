@@ -28,16 +28,6 @@ class WordEmbedding:
             output_f.writelines(vocabs)
         logging.info('Dumped %s vocabs to %s', len(vocabs), path_for_vocab)
 
-    def save_json(self, path_for_weight, path_for_vocab):
-        weights = self.get_weight()
-        np.save(path_for_weight, weights)
-        logging.info('Dumped word embedding weights with shape %s to %s.npy', weights.shape, path_for_weight)
-        with open(path_for_vocab, 'wt', encoding='utf-8') as output_f:
-            vocabs = self.get_vocab()
-            vocabs = [tok + '\n' for tok in vocabs]
-            output_f.writelines(vocabs)
-        logging.info('Dumped %s vocabs to %s', len(vocabs), path_for_vocab)
-
     @staticmethod
     def load_it(path_for_weight, path_for_vocab):
         raise NotImplementedError('It has not been necessary now')

@@ -83,8 +83,24 @@ def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pa
             break
     if output_pandas:
         df_data = pd.DataFrame(data)
+        if fields != ('*', ):
+            df_data = fill_fields(df_data, fields+('topic_id', ))
         return df_data
     return data
+
+
+def fill_fields(df, fields, default_value=''):
+    """
+    Add missing field with default values, and ensure columns in the same order of `fields`
+    :param df:
+    :param fields: list
+    :param default_value:
+    :return:
+    """
+    for f in fields:
+        if f not in df.columns:
+            df[f] = default_value
+    return df[list(fields)]
 
 
 def remove_vietnamese_accent(utf8_str):

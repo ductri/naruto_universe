@@ -98,3 +98,13 @@ class Voc:
                      doc]).strip() for doc in index_docs]
         return docs
 
+
+class VocHelper:
+    def __init__(self):
+        self.word2count = Counter()
+
+    def add_docs(self, preprocessed_docs):
+        docs = [doc.split() for doc in preprocessed_docs]
+        tokens = [tok for doc in docs for tok in doc]
+        for tok in tokens:
+            self.word2count.update(tok)

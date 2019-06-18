@@ -24,66 +24,32 @@ class Voc:
         self.tokenize_func = tokenize_func
         self.space_char = space_char
 
-        self.word2count = Counter()
-        self.special_idx = None
+        self.index2word = []
+        self.__word2index = dict()
+        self.padding_idx = -1
+        self.oov_idx = -1
+        self.embedding_weights = None
 
-    def add_sentence(self, sentence):
-        for word in self.tokenize_func(sentence):
-            self.__add_word(word)
-
-    def __add_word(self, word):
-        self.word2count.update([word])
-
-    def build_from_scratch(self, special_tokens=('', '__o__')):
-        """
-
-        :param special_tokens: in order: padding, oov, and the others
-        :return:
-        """
-        vocabs = [k for k, v in self.word2count.most_common()]
-        self.__validate_vocabs(vocabs, special_tokens)
-        vocabs = list(special_tokens) + vocabs
-        self.padding_idx = 0
-        self.oov_idx = 1
-        self.reindex(vocabs)
-
-    def __validate_vocabs(self, vocabs, special_tokens):
-        if special_tokens[0] in vocabs:
-            logging.error('Token is same at padding_char: %s', special_tokens[0])
-            raise Exception('Token is same at padding_char: %s' % special_tokens[0])
-        if special_tokens[1] in vocabs:
-            logging.error('Token is same at oov_char: %s', special_tokens[1])
-            raise Exception('Token is same at oov_char: %s' % special_tokens[1])
-
-    def reindex(self, vocabs, padding_idx=0, oov_idx=1, *args):
-        """
-
-        :param vocabs: Without special tokens: padding, oov
-        :param special_idx:
-        :return:
-        """
-        self.index2word = vocabs.copy()
-        self.word2index = {tok: idx for idx, tok in enumerate(vocabs)}
+    def build_from_tokens(self, tokens, padding_idx, oov_idx):
+        assert len(tokens) == len(set(tokens))
+        self.index2word = tokens
         self.padding_idx = padding_idx
         self.oov_idx = oov_idx
-        logging.info('Indexing vocabs successfully. Total vocabs: %s', len(self.index2word))
 
-    def trim(self, min_count):
-        original_len = len(self.word2count)
-        vocabs = list(self.word2count.keys())
-        for k in vocabs:
-            if self.word2count[k] < min_count:
-                del self.word2count[k]
-        after_trimming_len = len(self.word2count)
-        logging.info('keep_words {} / {} = {:.4f}'.format(after_trimming_len, original_len, after_trimming_len / original_len))
+    def add_embedding_weights(self, weights):
+        self.embedding_weights = weights
+
+    def __build_word2index(self):
+        self.__word2index = {tok: idx for idx, tok in enumerate(self.index2word)}
 
     def dump(self, path_file):
         with open(path_file, 'wb') as o_f:
-            pickle.dump({'vocabs': self.index2word,
+            pickle.dump({'index2word': self.index2word,
                          'tokenize_func': self.tokenize_func,
                          'space_char': self.space_char,
                          'padding_idx': self.padding_idx,
-                         'oov_idx': self.oov_idx
+                         'oov_idx': self.oov_idx,
+                         'embedding_weights': self.embedding_weights
                          }, o_f)
 
     @staticmethod
@@ -93,9 +59,10 @@ class Voc:
             temp = pickle.load(i_f)
             voc.tokenize_func = temp['tokenize_func']
             voc.space_char = temp['space_char']
-            voc.reindex(temp['vocabs'])
+            voc.index2word = temp['index2word']
             voc.padding_idx = temp['padding_idx']
             voc.oov_idx = temp['oov_idx']
+            voc.embedding_weights = temp['embedding_weights']
         return voc
 
     def docs2idx(self, docs, equal_length=-1):

@@ -44,6 +44,9 @@ class Voc:
         assert len(self.index2word) == weights.shape[0]
         self.__embedding_weights = weights
 
+    def get_embedding_weights(self):
+        return self.__embedding_weights
+
     def freeze(self):
         assert self.__is_freeze is False
         self.__build_word2index()

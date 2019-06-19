@@ -25,31 +25,42 @@ class Voc:
         self.space_char = space_char
 
         self.index2word = []
-        self.__word2index = dict()
         self.padding_idx = -1
         self.oov_idx = -1
-        self.embedding_weights = None
+
+        self.__word2index = dict()
+        self.__embedding_weights = None
+        self.__is_freeze = False
 
     def build_from_tokens(self, tokens, padding_idx, oov_idx):
+        assert self.__is_freeze is False
         assert len(tokens) == len(set(tokens))
         self.index2word = tokens
         self.padding_idx = padding_idx
         self.oov_idx = oov_idx
 
     def add_embedding_weights(self, weights):
-        self.embedding_weights = weights
+        assert self.__is_freeze is False
+        assert len(self.index2word) == weights.shape[0]
+        self.__embedding_weights = weights
+
+    def freeze(self):
+        assert self.__is_freeze is False
+        self.__build_word2index()
+        self.__is_freeze = True
 
     def __build_word2index(self):
         self.__word2index = {tok: idx for idx, tok in enumerate(self.index2word)}
 
     def dump(self, path_file):
+        assert self.__is_freeze is True
         with open(path_file, 'wb') as o_f:
             pickle.dump({'index2word': self.index2word,
                          'tokenize_func': self.tokenize_func,
                          'space_char': self.space_char,
                          'padding_idx': self.padding_idx,
                          'oov_idx': self.oov_idx,
-                         'embedding_weights': self.embedding_weights
+                         'embedding_weights': self.__embedding_weights
                          }, o_f)
 
     @staticmethod
@@ -59,10 +70,11 @@ class Voc:
             temp = pickle.load(i_f)
             voc.tokenize_func = temp['tokenize_func']
             voc.space_char = temp['space_char']
-            voc.index2word = temp['index2word']
             voc.padding_idx = temp['padding_idx']
             voc.oov_idx = temp['oov_idx']
-            voc.embedding_weights = temp['embedding_weights']
+            voc.index2word = temp['index2word']
+            voc.add_embedding_weights(temp['embedding_weights'])
+            voc.freeze()
         return voc
 
     def docs2idx(self, docs, equal_length=-1):
@@ -73,9 +85,10 @@ class Voc:
         :param min_length: -1 means keeping original length
         :return:
         """
+        assert self.__is_freeze is True
         docs = [self.tokenize_func(doc) for doc in docs]
         oov_index = self.oov_idx
-        index_docs = [[self.word2index.get(token, oov_index) for token in doc] for doc in docs]
+        index_docs = [[self.__word2index.get(token, oov_index) for token in doc] for doc in docs]
         index_docs = [self.__add_idx_padding(doc, equal_length) for doc in index_docs]
         return index_docs
 
@@ -90,6 +103,7 @@ class Voc:
         return doc + (length - len(doc)) * [padding_idx]
 
     def idx2docs(self, index_docs, is_skip_padding=True):
+        assert self.__is_freeze is True
         padding_char = self.index2word[self.padding_idx] if not is_skip_padding else ''
         padding_idx = self.padding_idx
 

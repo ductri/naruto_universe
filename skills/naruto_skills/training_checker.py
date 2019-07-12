@@ -36,7 +36,7 @@ class TrainingChecker:
             logging.info('New best score: %s', self._score)
             logging.info('Saved model at %s', path_to_save)
         else:
-            logging.info('Current best score is %s at step %', self._score, self._step)
+            logging.info('Current best score is %s at step %s', self._score, self._step)
 
     def best(self):
         return self._score, self._step

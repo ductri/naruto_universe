@@ -36,13 +36,16 @@ class TrainingChecker:
             logging.info('New best score: %s', self._score)
             logging.info('Saved model at %s', path_to_save)
         else:
-            logging.info('Current best score is %s at step %s', self._score, self._step)
+            logging.info('Current best score is %s at %s', self._score, self.__get_file_name())
 
     def best(self):
         return self._score, self._step
 
+    def __get_file_name(self):
+        return os.path.join(self.__path_to_dir_save, '%s.pt' % self._step)
+
     def save_model(self):
-        file_name = os.path.join(self.__path_to_dir_save, '%s.pt' % self._step)
+        file_name = self.__get_file_name()
         torch.save({
             'model_state_dict': self._model.state_dict(),
             'optimizer': self._model.optimizer.state_dict(),

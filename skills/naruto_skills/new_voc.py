@@ -20,7 +20,15 @@ class Voc:
     OOV_TOK = '__o__'
 
     def __init__(self, tokenize_func=None, space_char=None):
-
+        """
+        list_tokens = [padding, oov] + [#all_tokens]
+        voc = Voc(tokenize_func=Voc.WORD_LV_TOK_FUNC, space_char=Voc.WORD_LV_SPACE_CHR)
+        voc.build_from_tokens(list_tokens, padding_idx=0, oov_idx=1)
+        voc.freeze()
+        voc.dump('voc')
+        :param tokenize_func:
+        :param space_char:
+        """
         self.tokenize_func = tokenize_func
         self.space_char = space_char
 
@@ -33,6 +41,13 @@ class Voc:
         self.__is_freeze = False
 
     def build_from_tokens(self, tokens, padding_idx, oov_idx):
+        """
+
+        :param tokens: It must contain padding and oov
+        :param padding_idx: Index of padding in `tokens`
+        :param oov_idx: Index of padding in `oov`
+        :return:
+        """
         assert self.__is_freeze is False
         assert len(tokens) == len(set(tokens))
         self.index2word = tokens
@@ -76,7 +91,8 @@ class Voc:
             voc.padding_idx = temp['padding_idx']
             voc.oov_idx = temp['oov_idx']
             voc.index2word = temp['index2word']
-            voc.add_embedding_weights(temp['embedding_weights'])
+            if temp['embedding_weights'] is not None:
+                voc.add_embedding_weights(temp['embedding_weights'])
             voc.freeze()
         return voc
 

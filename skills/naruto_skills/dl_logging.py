@@ -58,3 +58,15 @@ class DLLoggingHandler:
 
     def close(self):
         pass
+
+
+cache = {}
+
+
+def get_logger_instance(name):
+    global cache
+    if name in cache:
+        return cache[name]
+    else:
+        cache[name] = DLLogger()
+        return cache[name]

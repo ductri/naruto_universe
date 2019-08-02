@@ -36,6 +36,7 @@ RUN pip install pytorch-nlp==0.4.1
 RUN pip install tensorflow==1.13.1
 RUN pip install tensorboard==1.13.1
 RUN pip install tensorboardX==1.7
+RUN pip install sentencepiece==0.1.82
 
 # Install naruto_skills
 ADD skills/ /tmp/skills/

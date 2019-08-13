@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:1.13.1-gpu-py3
+FROM tensorflow/tensorflow:1.14.0-gpu-py3
 MAINTAINER ductricse@gmail.com
 ENV REFRESHED_AT 2018-07-28
 

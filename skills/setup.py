@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='naruto_skills',
-    version='1.1',
+    version='1.2',
     description='Naruto has to do some tasks very quickly. The lib helps him to deal with those tremendous tasks',
     url='',
     author='Duc Tri Nguyen',

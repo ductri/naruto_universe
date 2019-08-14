@@ -30,6 +30,7 @@ RUN jupyter nbextensions_configurator enable --user
 RUN pip install --upgrade matplotlib==3.0.2
 RUN pip install dask==1.1.4
 RUN pip install dask[dataframe]==1.1.4
+RUN pip install tensor2tensor==1.13.4
 
 # Install naruto_skills
 ADD skills/ /tmp/skills/

@@ -111,7 +111,8 @@ class Voc:
 
         for i in range(len(index_docs)-1):
             if len(index_docs[i]) != len(index_docs[i+1]):
-                logging.warning('Not all indexed documents are equal in length')
+                logging.warning('Not all indexed documents are equal in length. Example: doc_%s: %s\t doc_%s: %s', i, len(index_docs[i]), i+1, len(index_docs[i+1]))
+                break
         return index_docs
 
     def __add_idx_padding(self, doc, length):

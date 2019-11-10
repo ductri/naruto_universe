@@ -6,6 +6,8 @@ import pandas as pd
 
 from naruto_skills.network import get
 
+ALL_FIELDS = ()
+
 
 def build_url(domain, topic, list_filters=(), fields=('*',)):
     """

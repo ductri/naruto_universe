@@ -101,7 +101,6 @@ class Voc:
 
         :param docs:
         :param equal_length: -1 means keeping original length
-        :param min_length: -1 means keeping original length
         :return:
         """
         assert self.__is_freeze is True
@@ -109,6 +108,10 @@ class Voc:
         oov_index = self.oov_idx
         index_docs = [[self.__word2index.get(token, oov_index) for token in doc] for doc in docs]
         index_docs = [self.__add_idx_padding(doc, equal_length) for doc in index_docs]
+
+        for i in range(len(index_docs)-1):
+            if len(index_docs[i]) != len(index_docs[i+1]):
+                logging.warning('Not all indexed documents are equal in length')
         return index_docs
 
     def __add_idx_padding(self, doc, length):

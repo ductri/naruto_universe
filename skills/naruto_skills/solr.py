@@ -35,7 +35,8 @@ def build_url(domain, topic, list_filters=(), fields=('*',)):
     return url
 
 
-def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pandas=True, fields=('*',), username='', password=''):
+def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pandas=True, fields=('*',), username='',
+                password='', only_metadata=False):
     """
 
     :param domain: str
@@ -54,6 +55,9 @@ def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pa
     :param batch_size:
     :param output_pandas: output a DataFrame or not
     :param fields:
+    :param username:
+    :param password:
+    :param only_metadata:
     :return:
     """
     pos = 0
@@ -75,6 +79,10 @@ def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pa
         logging.info('Crawled topic {} on page {}, {}/{} done'.format(topic, page_index,
                                                                       min(pos + n_rows, result['response']['numFound']),
                                                                       result['response']['numFound']))
+        if only_metadata:
+            del result['response']['docs']
+            return result
+
         page_index += 1
         for item in result['response']['docs']:
             item['topic_id'] = topic
@@ -83,6 +91,7 @@ def crawl_topic(domain, topic, filters=(), limit=1e9, batch_size=5000, output_pa
         data_len += len(result['response']['docs'])
         if len(result['response']['docs']) == 0:
             break
+
     if output_pandas:
         df_data = pd.DataFrame(data)
         if fields != ('*', ):

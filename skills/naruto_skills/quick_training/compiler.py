@@ -1,8 +1,8 @@
 import pandas as pd
 
 from quick_training import constants
-from quick_training.split_transform import SimpleSplitTransform
-from quick_training.preprocess_transform import PreprocessTransform
+from quick_training.initial_transform import SimpleSplitTransform
+from quick_training.preprocess_transform import SimplePreprocessTransform
 from quick_training.indexing_transform import WordEmbeddingIndexingTransform, BagWordIndexingTransform
 from quick_training.batching_transform import BatchingTransform
 from quick_training.magical_transform import SimpleLogisticRegression
@@ -14,7 +14,7 @@ if __name__ == '__main__':
     hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] = 'tmp/'
 
     transformer_0 = SimpleSplitTransform(hparams)
-    transformer_1 = PreprocessTransform(hparams)
+    transformer_1 = SimplePreprocessTransform(hparams)
     transformer_2 = BagWordIndexingTransform(hparams)
     # transformer_3 = BatchingTransform(hparams)
     transformer_4 = SimpleLogisticRegression(hparams)

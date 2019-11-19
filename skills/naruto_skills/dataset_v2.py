@@ -8,7 +8,7 @@ import pandas as pd
 seed = 0
 
 """
-These following features are not supported anymore, since it shoule be the responsibility of tensorflow tf.data: Shuffle, strictly equal size when getting batch
+These following features are not supported anymore, since it shoule be the responsibility of tensorflow tf.tmp: Shuffle, strictly equal size when getting batch
 
 - There are no notion of label or X either. Each element in dataset is a tuple
 - Aim to support iter to reduce the depending on memory size
@@ -34,9 +34,9 @@ class NarutoDataset:
 
         :param X:
         :param y:
-        :param batch_size: <0 for get all data in a batch
+        :param batch_size: <0 for get all tmp in a batch
         :param num_epochs: <0 for an infinite generator
-        :param is_strictly_equal: True mean that we will not return if len(data) < batch_size
+        :param is_strictly_equal: True mean that we will not return if len(tmp) < batch_size
         :return:
         """
 
@@ -46,7 +46,7 @@ class NarutoDataset:
             for _ in range(num_epochs):
                 return self.__generate_one_epoch(batch_size)
         else:
-            logging.info('We are going to generate infinite data.')
+            logging.info('We are going to generate infinite tmp.')
             while True:
                 return self.__generate_one_epoch(batch_size)
 

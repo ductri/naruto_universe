@@ -26,9 +26,9 @@ class DataWithLabel:
 
         :param X:
         :param y:
-        :param batch_size: <0 for get all data in a batch
+        :param batch_size: <0 for get all tmp in a batch
         :param num_epochs: <0 for an infinite generator
-        :param is_strictly_equal: True mean that we will not return if len(data) < batch_size
+        :param is_strictly_equal: True mean that we will not return if len(tmp) < batch_size
         :return:
         """
         if is_strictly_equal:
@@ -48,7 +48,7 @@ class DataWithLabel:
                     elif batch + batch_size <= self.X.shape[0]:
                         yield self.X[batch: batch+batch_size], self.y[batch: batch+batch_size]
         else:
-            logging.info('We are going to generate infinite data. Shuffling happens every %s steps', int(self.X.shape[0]/batch_size))
+            logging.info('We are going to generate infinite tmp. Shuffling happens every %s steps', int(self.X.shape[0]/batch_size))
             while True:
                 self.__shuffle_data()
                 for batch in range(0, self.X.shape[0], batch_size):

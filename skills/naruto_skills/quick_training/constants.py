@@ -1,4 +1,4 @@
-SPLIT_TRANSFORM = 'split_transform'
+INITIAL_TRANSFORM = 'initial_transform'
 PREPROCESS_TRANSFORM = 'preprocess_transform'
 INDEXING_TRANSFORM = 'indexing_transform'
 BATCHING_TRANSFORM = 'batching_transform'

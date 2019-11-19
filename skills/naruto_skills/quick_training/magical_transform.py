@@ -30,7 +30,9 @@ class MagicalTransform:
 class SimpleLogisticRegression(MagicalTransform):
     def __init__(self, hparams):
         MagicalTransform.__init__(self, hparams)
-        self.module_hparams['num_epochs'] = 10
+        default_hparams = dict(num_epochs=10)
+        default_hparams.update(self.module_hparams)
+        self.module_hparams.update(default_hparams)
         self.model = None
 
     def fit(self, docs, labels):

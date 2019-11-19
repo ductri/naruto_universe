@@ -113,7 +113,7 @@ class Trainer:
     @staticmethod
     def classification_report_test(predictor, test_iterator):
         logging.info('\n')
-        logging.info('Predict on data test')
+        logging.info('Predict on tmp test')
 
         y_true = []
         y_pred = []

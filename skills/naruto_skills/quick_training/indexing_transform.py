@@ -29,13 +29,16 @@ class IndexingTransform:
 class BagWordIndexingTransform(IndexingTransform):
     def __init__(self, hparams):
         IndexingTransform.__init__(self, hparams)
-        self.module_hparams['min_count'] = 5
+        default_hparams = dict(min_count=5)
+        default_hparams.update(self.module_hparams)
+        self.module_hparams.update(default_hparams)
         self.vect = None
 
     def fit(self, docs):
         self.vect = Pipeline([('count_vect', CountVectorizer(min_df=self.module_hparams['min_count'])),
                               ('tf_idf', TfidfTransformer())])
         self.vect.fit(docs)
+        print('vocab_size: %s' % len(self.vect.steps[0][1].get_feature_names()))
 
     def transform(self, docs):
         return self.vect.transform(docs)

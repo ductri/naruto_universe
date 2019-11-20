@@ -38,6 +38,7 @@ class SimpleLSTM(MagicalTransformBase, nn.Module):
     def transform(self, data_loader):
         whole_preds = []
         for docs, *_ in data_loader:
+            docs = docs.to(self.module_hparams['device'])
             logits = self._forward(docs)
             output = logits.argmax(dim=-1).cpu().numpy()
             whole_preds.extend(output)

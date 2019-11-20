@@ -67,12 +67,9 @@ class BagWordIndexingTransform(IndexingTransform):
 class WordEmbeddingIndexingTransform(IndexingTransform):
     def __init__(self, hparams):
         IndexingTransform.__init__(self, hparams)
-
-        self.module_hparams['size'] = 300
-        self.module_hparams['window'] = 10
-        self.module_hparams['min_count'] = 5
-        self.module_hparams['workers'] = 8
-        self.module_hparams['level'] = 'word'
+        default_hparams = dict(size=300, window=10, min_count=5, workers=8, level='word')
+        default_hparams.update(self.module_hparams)
+        self.module_hparams.update(default_hparams)
         self.voc = None
 
     def transform(self, docs):
@@ -107,6 +104,7 @@ class WordEmbeddingIndexingTransform(IndexingTransform):
             self.voc.add_embedding_weights(np.concatenate((padding_vector.reshape(1, -1), oov_vector.reshape(1, -1), trained_weights), axis=0))
 
             self.voc.freeze()
+            self.module_hparams['vocab_size'] = len(self.voc._index2word)
             self.describe(docs, self.voc)
 
         elif self.module_hparams['level'] == 'char':
@@ -122,7 +120,7 @@ class WordEmbeddingIndexingTransform(IndexingTransform):
         self.voc.dump(path_to_output)
 
     def describe(self, docs, voc):
-        print(f'vocab_size: {len(voc._index2word)}\t embedding_size: {voc.get_embedding_weights().shape[0]}')
+        print(f'vocab_size: {len(voc._index2word)}\t embedding_size: {voc.get_embedding_weights().shape[1]}')
         print('Some samples:')
         samples = [docs[2], docs[3], docs[5]]
         pos_samples = voc.idx2docs(voc.docs2idx(samples))

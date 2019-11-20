@@ -1,6 +1,8 @@
 from sklearn.linear_model.logistic import LogisticRegression
 from sklearn.metrics import classification_report
 import pickle
+import torch
+from torch import nn, optim
 
 from quick_training import constants
 from quick_training import utils
@@ -9,7 +11,7 @@ from quick_training import utils
 print = utils.get_printer(__name__)
 
 
-class MagicalTransform:
+class MagicalTransformBase:
     def __init__(self, hparams):
         self.root_hparams = hparams
         self.module_hparams = hparams[constants.MAGICAL_TRANSFORM]
@@ -27,9 +29,9 @@ class MagicalTransform:
         raise NotImplemented
 
 
-class SimpleLogisticRegression(MagicalTransform):
+class SimpleLogisticRegression(MagicalTransformBase):
     def __init__(self, hparams):
-        MagicalTransform.__init__(self, hparams)
+        MagicalTransformBase.__init__(self, hparams)
         default_hparams = dict(num_epochs=10)
         default_hparams.update(self.module_hparams)
         self.module_hparams.update(default_hparams)
@@ -61,3 +63,4 @@ class SimpleLogisticRegression(MagicalTransform):
         with open(directory + '/' + file_name, 'rb') as i_f:
             t.model = pickle.load(i_f)
         return t
+

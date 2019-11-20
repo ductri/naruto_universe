@@ -1,8 +1,8 @@
 from collections import defaultdict
 import json
 
-from quick_training.task import SimpleTask, SimpleTask2, LSTMTask
-from quick_training import constants
+from naruto_skills.quick_training.task import LSTMTask
+from naruto_skills.quick_training import constants
 
 
 if __name__ == '__main__':

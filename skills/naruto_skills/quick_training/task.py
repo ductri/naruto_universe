@@ -2,14 +2,14 @@ import pandas as pd
 from sklearn.metrics import classification_report
 import json
 
-from quick_training import constants
-from quick_training.initial_transform import SimpleSplitTransform, FileMappingTransform
-from quick_training.preprocess_transform import SimplePreprocessTransform
-from quick_training.indexing_transform import WordEmbeddingIndexingTransform, BagWordIndexingTransform
-from quick_training.batching_transform import SimpleBatchingTransform
-from quick_training.magical_transform.traditional_transform import SimpleLogisticRegression
-from quick_training.magical_transform.deep_transform import SimpleLSTM
-from quick_training import utils
+from naruto_skills.quick_training import constants
+from naruto_skills.quick_training.initial_transform import SimpleSplitTransform, FileMappingTransform
+from naruto_skills.quick_training.preprocess_transform import SimplePreprocessTransform
+from naruto_skills.quick_training.indexing_transform import WordEmbeddingIndexingTransform, BagWordIndexingTransform
+from naruto_skills.quick_training.batching_transform import SimpleBatchingTransform
+from naruto_skills.quick_training.magical_transform.traditional_transform import SimpleLogisticRegression
+from naruto_skills.quick_training.magical_transform.deep_transform import SimpleLSTM
+from naruto_skills.quick_training import utils
 
 
 print = utils.get_printer(__name__)

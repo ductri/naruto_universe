@@ -1,11 +1,10 @@
-from sklearn.metrics import classification_report
 import pickle
 from torch import nn, optim
 import torch
 
-from quick_training import constants
-from quick_training import utils
-from quick_training.magical_transform.traditional_transform import MagicalTransformBase
+from naruto_skills.quick_training import constants
+from naruto_skills.quick_training import utils
+from naruto_skills.quick_training.magical_transform.traditional_transform import MagicalTransformBase
 
 
 print = utils.get_printer(__name__)

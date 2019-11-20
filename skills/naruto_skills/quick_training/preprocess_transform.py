@@ -1,7 +1,7 @@
 from nltk.tokenize import word_tokenize
 
-from quick_training import utils
-from quick_training import constants
+from naruto_skills.quick_training import utils
+from naruto_skills.quick_training import constants
 
 print = utils.get_printer(__name__)
 

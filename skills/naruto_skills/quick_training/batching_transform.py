@@ -2,7 +2,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
 
-from quick_training import constants, utils
+from naruto_skills.quick_training import constants, utils
 
 print = utils.get_printer(__name__)
 

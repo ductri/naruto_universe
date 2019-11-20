@@ -5,8 +5,8 @@ from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.pipeline import Pipeline
 import pickle
 
-from quick_training import constants, utils
-from new_voc import Voc
+from naruto_skills.quick_training import constants, utils
+from naruto_skills.new_voc import Voc
 
 print = utils.get_printer(__name__)
 

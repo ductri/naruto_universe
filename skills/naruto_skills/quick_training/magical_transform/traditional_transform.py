@@ -1,11 +1,9 @@
 from sklearn.linear_model.logistic import LogisticRegression
 from sklearn.metrics import classification_report
 import pickle
-import torch
-from torch import nn, optim
 
-from quick_training import constants
-from quick_training import utils
+from naruto_skills.quick_training import constants
+from naruto_skills.quick_training import utils
 
 
 print = utils.get_printer(__name__)

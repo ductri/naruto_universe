@@ -88,6 +88,7 @@ class SimpleLSTM(MagicalTransformBase, nn.Module):
 
     def fit(self, data_loader):
         device = torch.device(self.module_hparams['device'])
+        self.to(device)
         for epoch_idx in range(self.module_hparams['num_epochs']):
             print('Training epoch %s ...' % epoch_idx)
             l = 0

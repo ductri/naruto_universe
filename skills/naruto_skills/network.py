@@ -2,6 +2,12 @@ import requests
 import logging
 import urllib
 from requests.auth import HTTPBasicAuth
+import aiohttp
+import asyncio
+import json
+import nest_asyncio
+
+nest_asyncio.apply()
 
 
 def get(url, timeout=10, number_time_retry=5, result_type='json', username='', password=''):
@@ -94,3 +100,22 @@ class ExceedNetworkRetryLimitException(Exception):
 
     def __str__(self):
         return 'Maximum number of re-trying: {}'.format(self.max_no_retry)
+
+
+def async_post(urls, payload_jsons, result_type='json', username='', password=''):
+    async def fetch(url, payload_json):
+        async with aiohttp.ClientSession() as session:
+            auth = aiohttp.BasicAuth(username, password)
+            async with session.post(url, json=payload_json, auth=auth) as resp:
+                response = await resp.text()
+                if result_type == 'json':
+                    response = json.loads(response)
+                return response
+
+    loop = asyncio.get_event_loop()
+    tasks = [asyncio.ensure_future(fetch(url, payload_json)) for url, payload_json in zip(urls, payload_jsons)]
+    print('Running %s tasks ...' % len(tasks))
+    results, failed_tasks = loop.run_until_complete(asyncio.wait(tasks))
+    print('There are %s successful tasks and %s failed tasks' % (len(results), len(failed_tasks)))
+    results = [item.result() for item in results]
+    return results

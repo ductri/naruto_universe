@@ -12,7 +12,7 @@ print = utils.get_printer(__name__)
 class MagicalTransformBase:
     def __init__(self, hparams):
         self.root_hparams = hparams
-        self.module_hparams = hparams[constants.MAGICAL_TRANSFORM]
+        self.module_hparams = hparams[constants.MAGIC_COMPONENT]
 
     def fit(self, *args):
         raise NotImplemented()
@@ -54,7 +54,7 @@ class SimpleLogisticRegression(MagicalTransformBase):
     @staticmethod
     def load_from_hparams(hparams):
         t = SimpleLogisticRegression(hparams)
-        t.module_hparams = hparams[constants.MAGICAL_TRANSFORM]
+        t.module_hparams = hparams[constants.MAGIC_COMPONENT]
 
         file_name = t.module_hparams['file_name']
         directory = t.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR]

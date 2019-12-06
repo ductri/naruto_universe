@@ -18,5 +18,5 @@ setup(
     'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     ],
-    install_requires=['gensim>=3.8.1', 'numpy>=1.13.3', 'nltk>=3.2.4', 'sklearn']
+    install_requires=['gensim>=3.8.1', 'numpy>=1.13.3', 'nltk>=3.2.4', 'sklearn', 'aiohttp', 'nest_asyncio']
 )

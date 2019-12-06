@@ -27,7 +27,7 @@ class SimpleLSTM(MagicComponent, nn.Module):
         self.fc = nn.Linear(in_features=4*self.component_hparams['hidden_size'],
                             out_features=self.component_hparams['hidden_size'])
         self.output_mapping_layer = nn.Linear(in_features=self.component_hparams['hidden_size'],
-                                              out_features=self.root_hparams[constants.SPLIT_TRAIN_TEST_COMPONENT]['num_classes'])
+                                              out_features=self.root_hparams[constants.GLOBAL][constants.GLOBAL_NUM_CLASSES])
         self.softmax_fn = nn.Softmax(dim=-1)
         self.dropout_fn = nn.Dropout(self.component_hparams['dropout_rate'])
         self.loss_fn = nn.CrossEntropyLoss(reduction='none')

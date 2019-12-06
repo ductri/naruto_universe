@@ -13,12 +13,16 @@ if __name__ == '__main__':
 
     hparams = defaultdict(lambda: {})
     hparams[constants.GLOBAL] = dict()
+
+    # All configs below are compulsory
     hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] = 'tmp/'
     hparams[constants.GLOBAL][constants.GLOBAL_HPARAMS] = 'hparams.txt'
-    hparams[constants.GLOBAL]['output_dir'] = 'tmp/out/'
+    hparams[constants.GLOBAL][constants.GLOBAL_OUTPUT] = 'tmp/out/'
+    hparams[constants.GLOBAL][constants.GLOBAL_NUM_CLASSES] = 3
+
+    # All configs below are optional
     hparams[constants.SPLIT_TRAIN_TEST_COMPONENT]['train_name'] = 'sample_train.csv'
     hparams[constants.SPLIT_TRAIN_TEST_COMPONENT]['test_name'] = 'sample_test.csv'
-    hparams[constants.SPLIT_TRAIN_TEST_COMPONENT]['num_classes'] = 3
     hparams[constants.INDEXING_COMPONENT]['min_count'] = 5
     hparams[constants.MAGIC_COMPONENT]['num_epochs'] = 2
 

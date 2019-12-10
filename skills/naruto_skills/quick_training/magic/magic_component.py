@@ -2,8 +2,9 @@ import torch
 from torch import nn, optim
 import pickle
 
-from . import constants, MagicComponent
-from .. import utils
+
+from . import MagicComponent
+from .. import utils, constants
 
 print = utils.get_printer(__name__)
 
@@ -107,3 +108,5 @@ class SimpleLSTM(MagicComponent, nn.Module):
         directory = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR]
         with open(directory + '/' + file_name, 'wb') as o_f:
             pickle.dump(self.model, o_f)
+
+

@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 from torch.utils.data import Dataset, DataLoader
+from scipy.sparse.csr import csr_matrix
 
 from . import constants, BatchingComponent
 from .. import utils
@@ -77,3 +78,20 @@ class PytorchDataset(Dataset):
 
     def __getitem__(self, idx):
         return self.rows[idx]
+
+
+class NonBatchingComponent(BatchingComponent):
+
+    def __init__(self, hparams):
+        BatchingComponent.__init__(self, hparams)
+
+    def process(self, docs, *other_columns, **kwargs):
+        if isinstance(docs, list):
+            no_docs = len(docs)
+        else:
+            no_docs = docs.shape[0]
+        print(f'Fitting {no_docs} docs ...')
+        if len(other_columns) > 0:
+            return [docs] + list(other_columns)
+        else:
+            return docs

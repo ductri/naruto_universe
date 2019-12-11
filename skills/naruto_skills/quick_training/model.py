@@ -36,10 +36,8 @@ class Model:
         self.word_embed_indexing_comp = self.pipeline[2](self.hparams)
         self.word_embed_indexing_comp.train(docs)
         docs = self.word_embed_indexing_comp.process(docs)
-
         self.batching_comp = self.pipeline[3](self.hparams)
         data_loader = self.batching_comp.process(docs, labels)
-
         self.magic_comp = self.pipeline[4](self.hparams)
         self.magic_comp.fit(data_loader)
 

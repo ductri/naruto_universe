@@ -8,9 +8,9 @@ from naruto_skills.quick_training.magic.cnn_family import SimpleCNN
 from naruto_skills.quick_training import constants
 
 
-class MagicModelTest(TestCase):
+class DeepModelTest(TestCase):
 
-    def test_valid(self):
+    def test_cnn_valid(self):
         hparams_root = defaultdict(lambda: {})
         hparams_root[constants.GLOBAL][constants.GLOBAL_SEQUENCE_LENGTH] = 100
         hparams = hparams_root[constants.MAGIC_COMPONENT]

@@ -7,3 +7,6 @@ class MagicComponent(Component):
 
     def __init__(self, hparams):
         Component.__init__(self, hparams)
+
+    def fit(self, data_loader, *args, **kwargs):
+        pass

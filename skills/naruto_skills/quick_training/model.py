@@ -31,7 +31,7 @@ class Model:
         self.split_comp = self.pipeline[0](self.hparams)
         self.split_comp.process()
         df_train = pd.read_csv(self.hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] + '/' +
-                               self.hparams[constants.SPLIT_TRAIN_TEST_COMPONENT]['train_name'])
+                               self.hparams[constants.SPLIT_TRAIN_TEST_COMPONENT]['train_name'], lineterminator='\n')
 
         docs, labels = list(df_train.iloc[:, 0]), list(df_train.iloc[:, 1])
 

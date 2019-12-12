@@ -2,7 +2,7 @@ import torch
 from torch import nn, optim
 
 
-from . import MagicComponent
+from .pytorch_family import PytorchFamily
 from .. import utils, constants
 
 print = utils.get_printer(__name__)
@@ -10,14 +10,14 @@ print = utils.get_printer(__name__)
 CONST_DUMPED_FILE = 'dumped_file'
 
 
-class SimpleLSTM(MagicComponent, nn.Module):
+class SimpleLSTM(PytorchFamily):
     default_hparams = dict(num_epochs=3, embedding_dim=300, hidden_size=300, num_layers=2, bidirectional=True,
                            dropout_rate=0.3, learning_rate=1e-3, device='cpu')
 
     def __init__(self, hparams):
-        MagicComponent.__init__(self, hparams)
-        nn.Module.__init__(self)
+        PytorchFamily.__init__(self, hparams)
 
+    def create_vital_elements(self):
         self.word_emb_layer = nn.Embedding(num_embeddings=self.root_hparams[constants.INDEXING_COMPONENT]['vocab_size'],
                                            embedding_dim=self.component_hparams['embedding_dim'])
         self.lstm_layer = nn.LSTM(input_size=self.component_hparams['embedding_dim'], hidden_size=self.component_hparams['hidden_size'],
@@ -32,12 +32,6 @@ class SimpleLSTM(MagicComponent, nn.Module):
         self.dropout_fn = nn.Dropout(self.component_hparams['dropout_rate'])
         self.loss_fn = nn.CrossEntropyLoss(reduction='none')
         self.optimizer = optim.Adam(self.parameters(), lr=self.component_hparams['learning_rate'])
-
-        if CONST_DUMPED_FILE in self.component_hparams:
-            file_name = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] + self.component_hparams[
-                CONST_DUMPED_FILE]
-            self.__restore(file_name)
-            print('Load trained model successfully')
 
     def process(self, data_loader, *args, **kwargs):
         whole_preds = []
@@ -105,16 +99,3 @@ class SimpleLSTM(MagicComponent, nn.Module):
             print('Loss: %.2f' % l)
         nn.Module.eval(self)
         print('Finished')
-
-    def save(self):
-        if CONST_DUMPED_FILE not in self.component_hparams:
-            self.component_hparams[CONST_DUMPED_FILE] = 'model.pt'
-        file_name = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] + self.component_hparams[CONST_DUMPED_FILE]
-        torch.save({
-            'model_state_dict': self.state_dict(),
-            'optimizer': self.optimizer.state_dict(),
-        }, file_name)
-
-    def __restore(self, path_file):
-        self.load_state_dict(torch.load(path_file))
-        nn.Module.eval(self)

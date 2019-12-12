@@ -12,3 +12,4 @@ GLOBAL_OUTPUT = 'output_dir'
 GLOBAL_NUM_CLASSES = 'num_classes'
 GLOBAL_SEQUENCE_LENGTH = 'sequence_length'
 
+CONST_DUMPED_FILE = 'dumped_file'

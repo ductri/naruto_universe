@@ -2,6 +2,7 @@ class Component:
     """A new component"""
     default_hparams = dict()
     name = None
+    CONST_DUMPED_FILE = 'dumped_file'
 
     def __init__(self, hparams=None):
         self.root_hparams = hparams

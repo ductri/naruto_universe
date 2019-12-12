@@ -17,7 +17,7 @@ class PytorchFamily(MagicComponent, nn.Module):
     def __init__(self, hparams):
         MagicComponent.__init__(self, hparams)
         nn.Module.__init__(self)
-        self.__create_vital_elements()
+        self.create_vital_elements()
         self.__restore_if_possible()
 
     def process(self, data_loader, *args, **kwargs):
@@ -41,22 +41,28 @@ class PytorchFamily(MagicComponent, nn.Module):
     def fit(self, data_loader, *args, **kwargs):
         raise NotImplemented()
 
-    def save(self):
+    def persist(self):
         if CONST_DUMPED_FILE not in self.component_hparams:
             self.component_hparams[CONST_DUMPED_FILE] = 'model.pt'
         file_name = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] + self.component_hparams[CONST_DUMPED_FILE]
         torch.save({
             'model_state_dict': self.state_dict(),
-            'optimizer': self.optimizer.state_dict(),
         }, file_name)
 
     def __restore_if_possible(self):
         if CONST_DUMPED_FILE in self.component_hparams:
             file_name = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] + self.component_hparams[
                 CONST_DUMPED_FILE]
-            self.load_state_dict(torch.load(file_name))
+            state_dict = torch.load(file_name)
+            self.load_state_dict(state_dict['model_state_dict'])
             nn.Module.eval(self)
             print('Load trained model successfully')
 
-    def __create_vital_elements(self):
+    def create_vital_elements(self):
         raise NotImplemented()
+
+    def train_mode(self, mode=True):
+        nn.Module.train(self, mode)
+
+    def eval_mode(self):
+        nn.Module.eval(self)

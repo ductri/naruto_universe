@@ -10,3 +10,4 @@ class MagicComponent(Component):
 
     def fit(self, data_loader, *args, **kwargs):
         pass
+

@@ -1,9 +1,14 @@
 import json
 
 import pandas as pd
-from sklearn.metrics import classification_report
 
 from naruto_skills.quick_training import constants
+from naruto_skills.quick_training.preprocess.preprocess_component import *
+from naruto_skills.quick_training.indexing.indexing_component import *
+from naruto_skills.quick_training.batch.batching_component import *
+from naruto_skills.quick_training.magic.tradition_family import *
+from naruto_skills.quick_training.magic.rnn_family import *
+from naruto_skills.quick_training.magic.cnn_family import *
 
 
 class Model:
@@ -52,9 +57,21 @@ class Model:
 class Predictor:
     def __init__(self, *trained_components):
         self.trained_components = trained_components
+        for comp in self.trained_components:
+            comp.component_hparams['class_name'] = comp.__class__.__name__
 
     def predict(self, docs):
         data = docs
         for comp in self.trained_components:
             data = comp.process(data)
         return data
+
+    def persist(self):
+        for comp in self.trained_components:
+            comp.persist()
+
+    @staticmethod
+    def load(hparams):
+        components_for_predict = [constants.PREPROCESS_COMPONENT, constants.INDEXING_COMPONENT, constants.BATCHING_COMPONENT, constants.MAGIC_COMPONENT]
+        components = [eval(hparams[comp_name]['class_name'])(hparams) for comp_name in components_for_predict]
+        return Predictor(*components)

@@ -1,12 +1,12 @@
 from collections import defaultdict
 
 from naruto_skills.quick_training import constants
-from naruto_skills.quick_training.model import Model
+from naruto_skills.quick_training.model import Model, Predictor
 from naruto_skills.quick_training.split_train_test.split_train_test import FileMappingComponent
 from naruto_skills.quick_training.preprocess.preprocess_component import SimplePreprocessComponent
-from naruto_skills.quick_training.indexing.indexing_component import WordEmbeddingIndexingComponent
-from naruto_skills.quick_training.batch.batching_component import AllPaddingBatchingComponent
-from naruto_skills.quick_training.magic.cnn_family import SimpleCNN
+from naruto_skills.quick_training.indexing.indexing_component import BagWordIndexingComponent
+from naruto_skills.quick_training.batch.batching_component import NonBatchingComponent
+from naruto_skills.quick_training.magic.tradition_family import SimpleLogisticRegression
 
 
 if __name__ == '__main__':
@@ -26,15 +26,17 @@ if __name__ == '__main__':
     hparams[constants.SPLIT_TRAIN_TEST_COMPONENT]['test_name'] = 'sample_test.csv'
     hparams[constants.PREPROCESS_COMPONENT]['max_length'] = 50
     hparams[constants.INDEXING_COMPONENT]['min_count'] = 5
-    hparams[constants.BATCHING_COMPONENT]['equal_length'] = 50
     hparams[constants.MAGIC_COMPONENT]['num_epochs'] = 2
     hparams[constants.MAGIC_COMPONENT]['fc__in_features'] = 2700
 
-    model = Model(hparams, [FileMappingComponent, SimplePreprocessComponent, WordEmbeddingIndexingComponent,
-                            AllPaddingBatchingComponent, SimpleCNN])
+    model = Model(hparams, [FileMappingComponent, SimplePreprocessComponent, BagWordIndexingComponent,
+                            NonBatchingComponent, SimpleLogisticRegression])
     model.train()
-
     predictor = model.extract_predictor()
+    predictor.persist()
+    del predictor
+
+    predictor = Predictor.load(hparams)
     import pandas as pd
     from sklearn.metrics import classification_report
     df_test = pd.read_csv('tmp/sample_test.csv')

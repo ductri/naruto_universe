@@ -1,8 +1,8 @@
 import torch
 from torch import nn, optim
-import pickle
 
-from . import constants, MagicComponent
+from . import constants
+from .pytorch_family import PytorchFamily
 from .. import utils
 
 print = utils.get_printer(__name__)
@@ -10,14 +10,15 @@ print = utils.get_printer(__name__)
 CONST_DUMPED_FILE = 'dumped_file'
 
 
-class SimpleCNN(MagicComponent, nn.Module):
+class SimpleCNN(PytorchFamily):
     default_hparams = dict(num_epochs=3, learning_rate=1e-3, device='cpu',
                            embedding_dim=300, out_channels=300, hidden_size=100, kernel_size=5, dropout_rate=0.3,
                            fc__in_features=6300)
 
     def __init__(self, hparams):
-        MagicComponent.__init__(self, hparams)
-        nn.Module.__init__(self)
+        PytorchFamily.__init__(self, hparams)
+
+    def create_vital_elements(self):
         if not 'vocab_size' in self.component_hparams:
             self.component_hparams['vocab_size'] = self.root_hparams[constants.INDEXING_COMPONENT]['vocab_size']
         if not 'num_classes' in self.component_hparams:
@@ -88,14 +89,6 @@ class SimpleCNN(MagicComponent, nn.Module):
         loss = self.loss_fn(logits, labels)
         loss = loss.mean(dim=0)
         return loss
-
-    def save(self):
-        if 'file_name' not in self.component_hparams:
-            self.component_hparams['file_name'] = 'model.pkl'
-        file_name = self.component_hparams['file_name']
-        directory = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR]
-        with open(directory + '/' + file_name, 'wb') as o_f:
-            pickle.dump(self.model, o_f)
 
     def _train_batch(self, docs, labels):
         """

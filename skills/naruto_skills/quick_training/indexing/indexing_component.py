@@ -56,9 +56,9 @@ class WordEmbeddingIndexingComponent(IndexingComponent):
         IndexingComponent.__init__(self, hparams)
         if CONST_DUMPED_FILE in self.component_hparams:
             path_to_file = self.root_hparams[constants.GLOBAL]['tmp_dir'] + '/' + self.component_hparams[CONST_DUMPED_FILE]
-            with open(path_to_file, 'rb') as i_f:
-                self.voc = pickle.load(i_f)
+            self.voc = Voc.load(path_to_file)
             self.is_train = True
+            print('Load trained model successfully')
         else:
             self.voc = None
             self.is_train = False

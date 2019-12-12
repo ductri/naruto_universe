@@ -18,7 +18,7 @@ class Predictor:
             self.sess = tf.Session()
             with self.sess.as_default():
                 saver = tf.train.import_meta_graph('{}.meta'.format(path_to_model))
-                saver.restore(self.sess, path_to_model)
+                saver.__restore_if_possible(self.sess, path_to_model)
         logging.info('Restored saved model at %s', path_to_model)
 
     def predict(self, input_values):

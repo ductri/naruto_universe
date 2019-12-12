@@ -1,6 +1,5 @@
 import torch
 from torch import nn, optim
-import pickle
 
 
 from . import MagicComponent
@@ -33,6 +32,12 @@ class SimpleLSTM(MagicComponent, nn.Module):
         self.dropout_fn = nn.Dropout(self.component_hparams['dropout_rate'])
         self.loss_fn = nn.CrossEntropyLoss(reduction='none')
         self.optimizer = optim.Adam(self.parameters(), lr=self.component_hparams['learning_rate'])
+
+        if CONST_DUMPED_FILE in self.component_hparams:
+            file_name = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] + self.component_hparams[
+                CONST_DUMPED_FILE]
+            self.__restore(file_name)
+            print('Load trained model successfully')
 
     def process(self, data_loader, *args, **kwargs):
         whole_preds = []
@@ -102,11 +107,14 @@ class SimpleLSTM(MagicComponent, nn.Module):
         print('Finished')
 
     def save(self):
-        if 'file_name' not in self.component_hparams:
-            self.component_hparams['file_name'] = 'model.pkl'
-        file_name = self.component_hparams['file_name']
-        directory = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR]
-        with open(directory + '/' + file_name, 'wb') as o_f:
-            pickle.dump(self.model, o_f)
+        if CONST_DUMPED_FILE not in self.component_hparams:
+            self.component_hparams[CONST_DUMPED_FILE] = 'model.pt'
+        file_name = self.root_hparams[constants.GLOBAL][constants.GLOBAL_DIRECTOR] + self.component_hparams[CONST_DUMPED_FILE]
+        torch.save({
+            'model_state_dict': self.state_dict(),
+            'optimizer': self.optimizer.state_dict(),
+        }, file_name)
 
-
+    def __restore(self, path_file):
+        self.load_state_dict(torch.load(path_file))
+        nn.Module.eval(self)

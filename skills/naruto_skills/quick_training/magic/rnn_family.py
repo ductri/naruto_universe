@@ -16,6 +16,7 @@ class SimpleLSTM(PytorchFamily):
 
     def __init__(self, hparams):
         PytorchFamily.__init__(self, hparams)
+        self.output_prob = False
 
     def create_vital_elements(self):
         self.word_emb_layer = nn.Embedding(num_embeddings=self.root_hparams[constants.INDEXING_COMPONENT]['vocab_size'],
@@ -38,7 +39,10 @@ class SimpleLSTM(PytorchFamily):
         for docs, *_ in data_loader:
             docs = docs.to(self.component_hparams['device'])
             logits = self._forward(docs)
-            output = logits.argmax(dim=-1).cpu().numpy()
+            if not self.output_prob:
+                output = logits.argmax(dim=-1).cpu().numpy()
+            else:
+                output = logits[:, 1].cpu().numpy()
             whole_preds.extend(output)
 
         return whole_preds

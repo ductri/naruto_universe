@@ -20,6 +20,7 @@ class SimpleLogisticRegression(MagicComponent):
         self.__restore_if_possible()
 
     def process(self, message, *args, **kwargs):
+        print('Processing')
         return self._clf.predict(message)
 
     def fit(self, training_data, *args, **kwargs):

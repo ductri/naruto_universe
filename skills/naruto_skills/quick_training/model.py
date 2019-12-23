@@ -69,6 +69,10 @@ class Predictor:
     def persist(self):
         for comp in self.trained_components:
             comp.persist()
+        root_hparams = self.trained_components[0].root_hparams
+        file_to_save = root_hparams[constants.GLOBAL][constants.GLOBAL_OUTPUT] + '/' + root_hparams[constants.GLOBAL][constants.GLOBAL_HPARAMS]
+        with open(file_to_save, 'wt') as o_f:
+            json.dump(root_hparams, o_f)
 
     @staticmethod
     def load(hparams):

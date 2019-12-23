@@ -19,6 +19,7 @@ class PytorchFamily(MagicComponent, nn.Module):
         nn.Module.__init__(self)
         self.create_vital_elements()
         self.__restore_if_possible()
+        self.to(self.component_hparams['device'])
 
     def process(self, data_loader, *args, **kwargs):
         raise NotImplemented()

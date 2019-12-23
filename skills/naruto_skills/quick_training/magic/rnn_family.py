@@ -42,7 +42,7 @@ class SimpleLSTM(PytorchFamily):
             if not self.output_prob:
                 output = logits.argmax(dim=-1).cpu().numpy()
             else:
-                output = logits[:, 1].detach().cpu().numpy()
+                output = self.softmax_fn(logits)[:, 1].detach().cpu().numpy()
             whole_preds.extend(output)
 
         return whole_preds
